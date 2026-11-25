@@ -1,0 +1,84 @@
+{
+  "name": "FPS Default (PUBG / Free Fire / CODM)",
+  "hintOpacity": 0.65,
+  "showHints": true,
+  "taps": [
+    {
+      "id": "fire01",
+      "label": "Bắn",
+      "key": "MouseLeft",
+      "x": 0.86,
+      "y": 0.72,
+      "visualRadius": 0.036,
+      "onlyWhenAimLocked": true
+    },
+    {
+      "id": "ads01",
+      "label": "Ngắm",
+      "key": "MouseRight",
+      "x": 0.92,
+      "y": 0.52,
+      "visualRadius": 0.032,
+      "onlyWhenAimLocked": true
+    },
+    {
+      "id": "jump01",
+      "label": "Nhảy",
+      "key": "Space",
+      "x": 0.92,
+      "y": 0.68,
+      "visualRadius": 0.032,
+      "onlyWhenAimLocked": false
+    },
+    {
+      "id": "reload01",
+      "label": "Nạp đạn",
+      "key": "R",
+      "x": 0.78,
+      "y": 0.88,
+      "visualRadius": 0.030,
+      "onlyWhenAimLocked": false
+    },
+    {
+      "id": "crouch01",
+      "label": "Ngồi",
+      "key": "C",
+      "x": 0.85,
+      "y": 0.88,
+      "visualRadius": 0.030,
+      "onlyWhenAimLocked": false
+    }
+  ],
+  "joysticks": [
+    {
+      "id": "wasd01",
+      "label": "Di chuyển",
+      "centerX": 0.17,
+      "centerY": 0.74,
+      "radius": 0.095,
+      "upKey": "W",
+      "leftKey": "A",
+      "downKey": "S",
+      "rightKey": "D",
+      "sprintModifierKey": "LeftShift",
+      "sprintRadius": 0.145,
+      "transitionMs": 8.0
+    }
+  ],
+  "fpsAims": [
+    {
+      "id": "aim01",
+      "label": "Xoay Tâm",
+      "toggleKey": "Grave",
+      "secondaryToggleKey": "RightCtrl",
+      "centerX": 0.68,
+      "centerY": 0.45,
+      "zoneHalfWidth": 0.22,
+      "zoneHalfHeight": 0.35,
+      "sensitivityX": 0.0012,
+      "sensitivityY": 0.0012,
+      "invertY": false
+    }
+  ],
+  "mobaSkills": []
+}

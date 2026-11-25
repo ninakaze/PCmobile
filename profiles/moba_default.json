@@ -1,0 +1,92 @@
+{
+  "name": "MOBA Default (Liên Quân / Tốc Chiến / MLBB)",
+  "hintOpacity": 0.65,
+  "showHints": true,
+  "taps": [
+    {
+      "id": "atk01",
+      "label": "Đánh thường",
+      "key": "Space",
+      "x": 0.89,
+      "y": 0.82,
+      "visualRadius": 0.038,
+      "onlyWhenAimLocked": false
+    },
+    {
+      "id": "recall01",
+      "label": "Biến về",
+      "key": "B",
+      "x": 0.62,
+      "y": 0.88,
+      "visualRadius": 0.028,
+      "onlyWhenAimLocked": false
+    },
+    {
+      "id": "spell01",
+      "label": "Phép bổ trợ",
+      "key": "F",
+      "x": 0.70,
+      "y": 0.88,
+      "visualRadius": 0.030,
+      "onlyWhenAimLocked": false
+    }
+  ],
+  "joysticks": [
+    {
+      "id": "wasd01",
+      "label": "Di chuyển",
+      "centerX": 0.16,
+      "centerY": 0.75,
+      "radius": 0.10,
+      "upKey": "W",
+      "leftKey": "A",
+      "downKey": "S",
+      "rightKey": "D",
+      "sprintModifierKey": "None",
+      "sprintRadius": 0.10,
+      "transitionMs": 7.0
+    }
+  ],
+  "fpsAims": [],
+  "mobaSkills": [
+    {
+      "id": "skill_q",
+      "label": "Chiêu 1",
+      "key": "Q",
+      "skillX": 0.75,
+      "skillY": 0.84,
+      "castRadius": 0.10,
+      "anchorX": 0.50,
+      "anchorY": 0.50,
+      "cancelX": 0.90,
+      "cancelY": 0.20,
+      "cancelWithRightClick": true
+    },
+    {
+      "id": "skill_w",
+      "label": "Chiêu 2",
+      "key": "E",
+      "skillX": 0.80,
+      "skillY": 0.68,
+      "castRadius": 0.10,
+      "anchorX": 0.50,
+      "anchorY": 0.50,
+      "cancelX": 0.90,
+      "cancelY": 0.20,
+      "cancelWithRightClick": true
+    },
+    {
+      "id": "skill_r",
+      "label": "Chiêu cuối",
+      "key": "R",
+      "skillX": 0.89,
+      "skillY": 0.56,
+      "castRadius": 0.10,
+      "anchorX": 0.50,
+      "anchorY": 0.50,
+      "cancelX": 0.90,
+      "cancelY": 0.20,
+      "cancelWithRightClick": true
+    }
+  ]
+}

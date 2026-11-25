@@ -14,7 +14,7 @@ namespace PhonePlayLink.UI;
 /// D) Bảng Cài đặt nhanh 2 tab (Hình ảnh & Độ trễ | Điều khiển & Phím tắt)
 /// E) Thanh HUD FPS & Độ trễ (F4, góc trên bên trái)
 /// </summary>
-public sealed class AppOverlayUi
+public sealed unsafe class AppOverlayUi
 {
     public const float SidebarWidthPx = 48f;
 

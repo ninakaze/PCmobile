@@ -15,6 +15,7 @@ public class KeymapEngineTests
         public bool IsScreenOn { get; private set; } = true;
         public void UpdateScreenSize(int width, int height) => CurrentScreenSize = (width, height);
         public void SetDisplayPower(bool powerOn) => IsScreenOn = powerOn;
+        public void SendAndroidKeyPress(int androidKeyCode) { }
 
         public void SendTouchEvent(AndroidMotionAction action, ulong pointerId, int x, int y, float pressure)
             => Events.Add(new SentEvent(action, pointerId, x, y, pressure));
@@ -177,5 +178,46 @@ public class KeymapEngineTests
         var release = sender.Events.Last(e => e.Action == AndroidMotionAction.Up);
         Assert.InRange(release.X, 898, 901);
         Assert.InRange(release.Y, 199, 201);
+    }
+
+    [Fact]
+    public void FpsAim_RespectsGlobalMouseSensitivityAndOverrideToggleKey()
+    {
+        var sender = new FakeTouchSender(2000, 1000);
+        using var ptrMgr = new MultiTouchPointerManager(sender);
+        var profile = new KeymapProfile
+        {
+            FpsAims =
+            [
+                new FpsAimBinding
+                {
+                    ToggleKey = InputKey.Grave,
+                    SecondaryToggleKey = InputKey.None,
+                    CenterX = 0.50f,
+                    CenterY = 0.50f,
+                    SensitivityX = 0.001f,
+                    SensitivityY = 0.001f
+                }
+            ]
+        };
+
+        var engine = new KeymapEngine(ptrMgr, profile)
+        {
+            GlobalMouseSensitivity = 2.0f,
+            OverrideAimToggleKey = InputKey.Tab
+        };
+
+        // Phím Grave cũ không bật khi đã override sang Tab
+        engine.HandleKeyInput(InputKey.Grave, isDown: true);
+        Assert.False(engine.IsAimLocked);
+
+        engine.HandleKeyInput(InputKey.Tab, isDown: true);
+        Assert.True(engine.IsAimLocked);
+        sender.Events.Clear();
+
+        // 50px * 0.001 * 2.0 = +0.10 => 0.50 + 0.10 = 0.60
+        engine.HandleMouseMove(null, null, relDx: 50, relDy: 0);
+        var move = sender.Events.Last(e => e.Action == AndroidMotionAction.Move);
+        Assert.InRange(move.X, (int)MathF.Round(0.598f * 1999), (int)MathF.Round(0.602f * 1999));
     }
 }

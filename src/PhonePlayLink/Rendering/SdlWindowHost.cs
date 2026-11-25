@@ -212,8 +212,8 @@ public sealed unsafe class SdlWindowHost : IDisposable
                         io.AddMousePosEvent(ev.Motion.X, ev.Motion.Y);
                     }
 
-                    bool mouseBlockedByUi = forceBlockGame || editorOpen || (!isAimLocked && hasImGui && io.WantCaptureMouse);
-                    if (!mouseBlockedByUi && keymapEngine is not null)
+                    bool mouseMotionBlocked = forceBlockGame || editorOpen || (!isAimLocked && hasImGui && io.WantCaptureMouse);
+                    if (!mouseMotionBlocked && keymapEngine is not null)
                     {
                         float? nx = null, ny = null;
                         if (!isAimLocked && ViewportMapper.TryWindowToNormalized(
@@ -260,8 +260,8 @@ public sealed unsafe class SdlWindowHost : IDisposable
                     }
 
                     // Nếu UI (Sidebar / Cài đặt / Editor / Device Hub) đang bắt chuột và không trong chế độ Aim Lock => tuyệt đối không chạm xuống điện thoại
-                    bool mouseBlockedByUi = forceBlockGame || editorOpen || (!isAimLocked && hasImGui && io.WantCaptureMouse);
-                    if (!mouseBlockedByUi && keymapEngine is not null && mouseKey != InputKey.None)
+                    bool mouseBtnBlocked = forceBlockGame || editorOpen || (!isAimLocked && hasImGui && io.WantCaptureMouse);
+                    if (!mouseBtnBlocked && keymapEngine is not null && mouseKey != InputKey.None)
                     {
                         float? nx = null, ny = null;
                         if (!isAimLocked && ViewportMapper.TryWindowToNormalized(

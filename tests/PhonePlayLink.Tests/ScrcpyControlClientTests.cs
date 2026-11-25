@@ -136,4 +136,47 @@ public class ScrcpyControlClientTests
 
         Assert.Equal([10, 0, 10, 1], recv);
     }
+
+    [Fact]
+    public void SerializeInjectKeycode_WritesExact14BytesScrcpyV5Format()
+    {
+        Span<byte> pkt = stackalloc byte[ScrcpyConstants.InjectKeycodePacketSize];
+        ScrcpyControlClient.SerializeInjectKeycode(pkt, AndroidKeyAction.Down, ScrcpyConstants.AndroidKeyCodeAppSwitch);
+
+        Assert.Equal(ScrcpyConstants.ControlMsgTypeInjectKeycode, pkt[0]);
+        Assert.Equal((byte)AndroidKeyAction.Down, pkt[1]);
+        Assert.Equal(ScrcpyConstants.AndroidKeyCodeAppSwitch, BinaryPrimitives.ReadInt32BigEndian(pkt.Slice(2, 4)));
+        Assert.Equal(0, BinaryPrimitives.ReadInt32BigEndian(pkt.Slice(6, 4)));
+        Assert.Equal(0, BinaryPrimitives.ReadInt32BigEndian(pkt.Slice(10, 4)));
+    }
+
+    [Fact]
+    public async Task ControlClient_SendAndroidKeyPress_SendsDownAndUp28Bytes()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+
+        Task<Socket> acceptTask = listener.AcceptSocketAsync();
+        using var clientSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        await clientSock.ConnectAsync(IPAddress.Loopback, port);
+        using Socket serverSock = await acceptTask;
+
+        using var controlClient = new ScrcpyControlClient(clientSock, 1080, 2400);
+        controlClient.SendAndroidKeyPress(ScrcpyConstants.AndroidKeyCodeBack);
+
+        byte[] recv = new byte[28];
+        int total = 0;
+        while (total < 28)
+        {
+            int n = await serverSock.ReceiveAsync(recv.AsMemory(total, 28 - total), SocketFlags.None);
+            Assert.True(n > 0);
+            total += n;
+        }
+
+        Assert.Equal((byte)AndroidKeyAction.Down, recv[1]);
+        Assert.Equal(ScrcpyConstants.AndroidKeyCodeBack, BinaryPrimitives.ReadInt32BigEndian(recv.AsSpan(2, 4)));
+        Assert.Equal((byte)AndroidKeyAction.Up, recv[15]);
+        Assert.Equal(ScrcpyConstants.AndroidKeyCodeBack, BinaryPrimitives.ReadInt32BigEndian(recv.AsSpan(16, 4)));
+    }
 }

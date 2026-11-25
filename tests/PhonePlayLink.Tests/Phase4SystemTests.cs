@@ -3,6 +3,7 @@ using System.Text;
 using ImGuiNET;
 using PhonePlayLink.Adb;
 using PhonePlayLink.Core;
+using PhonePlayLink.Keymap;
 using PhonePlayLink.Rendering;
 using PhonePlayLink.UI;
 
@@ -91,7 +92,12 @@ public class Phase4SystemTests
                 VideoCodec = "h265",
                 EnableAudio = false,
                 AutoTurnScreenOff = true,
-                ShowPerfHud = false
+                ShowPerfHud = false,
+                DefaultAimToggleKey = InputKey.Tab,
+                GlobalMouseSensitivity = 1.75f,
+                RememberWindowBounds = false,
+                WindowWidth = 1440,
+                WindowHeight = 900
             };
             cfg.SaveToFile(tmpFile);
 
@@ -104,6 +110,11 @@ public class Phase4SystemTests
             Assert.False(loaded.EnableAudio);
             Assert.True(loaded.AutoTurnScreenOff);
             Assert.False(loaded.ShowPerfHud);
+            Assert.Equal(InputKey.Tab, loaded.DefaultAimToggleKey);
+            Assert.InRange(loaded.GlobalMouseSensitivity, 1.74f, 1.76f);
+            Assert.False(loaded.RememberWindowBounds);
+            Assert.Equal(1440, loaded.WindowWidth);
+            Assert.Equal(900, loaded.WindowHeight);
 
             AppConfig overridden = AppConfig.LoadWithArgs(tmpFile, ["--fps", "120", "--codec", "h264", "--bitrate", "24000000"]);
             Assert.Equal(120f, overridden.MaxFps);
@@ -137,10 +148,11 @@ public class Phase4SystemTests
         };
 
         imgui.BeginFrame(window.Width, window.Height, 1f / 60f);
-        ui.DrawWaitingOrDeviceSelectionScreen(devices, isAdbConnected: true, connectingDeviceLabel: null, lastError: null);
+        ui.DrawDeviceHubScreen(config, devices, isAdbConnected: true, connectingDeviceLabel: null, lastError: null, imgui.HeadingFont);
+        ui.DrawRightSidebar(config, isFullscreen: false, isEditorOpen: false, isAimLocked: true, showHints: true, isPhoneScreenOn: false, isAudioMuted: false, hasAudio: true);
         ui.DrawPerfHud(stats, config, 2400, 1080, isPhoneScreenOn: false, activePointers: 2, isAimLocked: true, editorOpen: false);
         ui.DrawQuickSettingsWindow(config, Path.Combine(Path.GetTempPath(), "dummy_cfg.json"), devices, "R5CX123", isPhoneScreenOn: false, isConnected: true);
         ImGui.Render();
-        renderer.RenderFrame(null, true, stats, imgui, ImGui.GetDrawData());
+        renderer.RenderFrame(null, true, stats, imgui, ImGui.GetDrawData(), AppOverlayUi.SidebarWidthPx);
     }
 }

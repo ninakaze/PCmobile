@@ -65,4 +65,27 @@ public class ViewportMapperTests
         Assert.Equal((int)MathF.Round(0.18f * 2399), px2);
         Assert.Equal((int)MathF.Round(0.75f * 1079), py2);
     }
+
+    [Fact]
+    public void TryWindowToNormalized_WithRightSidebarReserved_ExcludesSidebarAndMapsRemainingArea()
+    {
+        // Cửa sổ 1920x1080, trừ Sidebar 48px => vùng hiển thị rộng 1872px (0..1872)
+        VideoViewport vp = ViewportMapper.ComputeViewport(1920, 1080, 1872, 1080, preserveAspectRatio: false, reservedRightPx: 48f);
+        Assert.Equal(0f, vp.X);
+        Assert.Equal(1872f, vp.Width);
+
+        // Click vào vùng Sidebar (X = 1900) phải trả về false
+        bool onSidebar = ViewportMapper.TryWindowToNormalized(
+            1900, 540, 1920, 1080, 1872, 1080, preserveAspectRatio: false,
+            out _, out _, clampOutsideToEdge: false, reservedRightPx: 48f);
+        Assert.False(onSidebar);
+
+        // Click ở chính giữa vùng còn lại (X = 936) => normX = 0.5
+        bool center = ViewportMapper.TryWindowToNormalized(
+            936, 540, 1920, 1080, 1872, 1080, preserveAspectRatio: false,
+            out float nx, out float ny, clampOutsideToEdge: false, reservedRightPx: 48f);
+        Assert.True(center);
+        Assert.InRange(nx, 0.499f, 0.501f);
+        Assert.InRange(ny, 0.499f, 0.501f);
+    }
 }
